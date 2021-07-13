@@ -1,0 +1,20 @@
+﻿@page "/route-parameters/{number:double}/{firstName?}/{isGraduate:bool?}"
+
+<h3>Number: @Number</h3>
+<h3>Text: @FirstName</h3>
+<h3>Is graduate: @IsGraduate</h3>
+<div>
+    <a href="/route-parameters/342/DotNetPro">Add first name</a>
+</div>
+<div>
+    <a href="/route-parameters/342/DotNetPro/TRUE">Set graduate to true and add first name</a>
+</div>
+
+@code{
+    [Parameter]
+    public double Number { get; set; }
+    [Parameter]
+    public string FirstName { get; set; }
+    [Parameter]
+    public bool IsGraduate { get; set; }
+}
