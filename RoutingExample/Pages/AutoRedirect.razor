@@ -1,0 +1,66 @@
+﻿@using System.Timers
+@using RoutingExample.Data
+@page "/auto-redirect"
+@inject NavigationManager NavigationManager
+@inject AutoRedirectService  AutoRedirectService
+@implements IDisposable
+
+<h3>AutoRedirect</h3>
+You will be redirect in @RedirectTimeLeft.
+<form>
+    <div>
+        <label>
+            <input type="checkbox" @bind-value="IsNavigateToExternalSite" />Navigate to Blazor School.
+        </label>
+    </div>
+    @if (IsNavigateToExternalSite is false)
+    {
+        <div>
+            <label>
+                <input type="checkbox" @bind-value="IsForceReload" />Force reload.
+            </label>
+        </div>
+    }
+    <div>
+        <button type="button" @onclick="() => AutoRedirectService.RedirectToBlazorSchool()">Navigate to Blazor School by Service</button>
+    </div>
+</form>
+
+@code {
+    private int RedirectTimeLeft { get; set; } = 5;
+    private bool IsNavigateToExternalSite { get; set; } = false;
+    private bool IsForceReload { get; set; } = false;
+    private Timer Timer = new Timer();
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Timer.Interval = 1 * 1000;
+            Timer.Elapsed += OnTick;
+            Timer.Start();
+        }
+    }
+
+    private async void OnTick(object sender, ElapsedEventArgs eventArgs)
+    {
+        await InvokeAsync(() =>
+        {
+            if (RedirectTimeLeft != 0)
+            {
+                RedirectTimeLeft--;
+                StateHasChanged();
+            }
+            else
+            {
+                string url = IsNavigateToExternalSite ? "https://blazorschool.com" : "/";
+                NavigationManager.NavigateTo(url, IsForceReload);
+            }
+        });
+    }
+
+    public void Dispose()
+    {
+        Timer.Elapsed -= OnTick;
+    }
+}

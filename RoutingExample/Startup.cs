@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RoutingExample.Data;
 
 namespace RoutingExample
 {
@@ -21,6 +22,7 @@ namespace RoutingExample
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddScoped<AutoRedirectService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
